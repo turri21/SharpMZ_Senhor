@@ -1,3 +1,7 @@
+=(SharpMZ_Senhor notes)=-
+
+Tested: Working Video 720p, 1080p & Sound
+
 # [Sharp MZ](https://en.wikipedia.org/wiki/Sharp_MZ) for MiSTer Platform
 
 For a better rendered view of this README, please look at my [github.io website](https://www.eaw.app/sharpmz-emulator/)
