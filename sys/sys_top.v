@@ -46,70 +46,70 @@ module sys_top
 	//////////// SDR ///////////
 	output [12:0] SDRAM_A,
 	inout  [15:0] SDRAM_DQ,
-	//output        SDRAM_DQML,
-	//output        SDRAM_DQMH,
+//	output        SDRAM_DQML,
+//	output        SDRAM_DQMH,
 	output        SDRAM_nWE,
 	output        SDRAM_nCAS,
 	output        SDRAM_nRAS,
 	output        SDRAM_nCS,
 	output  [1:0] SDRAM_BA,
 	output        SDRAM_CLK,
-	//output        SDRAM_CKE,
+//	output        SDRAM_CKE,
 
 `ifdef MISTER_DUAL_SDRAM
 	////////// SDR #2 //////////
-	output [12:0] SDRAM2_A,
-	inout  [15:0] SDRAM2_DQ,
-	output        SDRAM2_nWE,
-	output        SDRAM2_nCAS,
-	output        SDRAM2_nRAS,
-	output        SDRAM2_nCS,
-	output  [1:0] SDRAM2_BA,
-	output        SDRAM2_CLK,
+//	output [12:0] SDRAM2_A,
+//	inout  [15:0] SDRAM2_DQ,
+//	output        SDRAM2_nWE,
+//	output        SDRAM2_nCAS,
+//	output        SDRAM2_nRAS,
+//	output        SDRAM2_nCS,
+//	output  [1:0] SDRAM2_BA,
+//	output        SDRAM2_CLK,
 
 `else
 	//////////// VGA ///////////
-	//output  [5:0] VGA_R,
-	//output  [5:0] VGA_G,
-	//output  [5:0] VGA_B,
-	//inout         VGA_HS,  // VGA_HS is secondary SD card detect when VGA_EN = 1 (inactive)
-	//output		    VGA_VS,
-	//input         VGA_EN,  // active low
+//	output  [5:0] VGA_R,
+//	output  [5:0] VGA_G,
+//	output  [5:0] VGA_B,
+//	inout         VGA_HS,  // VGA_HS is secondary SD card detect when VGA_EN = 1 (inactive)
+//	output		  VGA_VS,
+//	input         VGA_EN,  // active low
 
 	/////////// AUDIO //////////
-	//output		  AUDIO_L,
-	//output		  AUDIO_R,
-	//output		  AUDIO_SPDIF,
+//	output		  AUDIO_L,
+//	output		  AUDIO_R,
+//	output		  AUDIO_SPDIF,
 
 	//////////// SDIO ///////////
-	//inout   [3:0] SDIO_DAT,
-	//inout         SDIO_CMD,
-	//output        SDIO_CLK,
+//	inout   [3:0] SDIO_DAT,
+//	inout         SDIO_CMD,
+//	output        SDIO_CLK,
 
 	//////////// I/O ///////////
-	//output        LED_USER,
-	//output        LED_HDD,
-	//output        LED_POWER,
-	//input         BTN_USER,
-	//input         BTN_OSD,
-	//input         BTN_RESET,
+//	output        LED_USER,
+//	output        LED_HDD,
+//	output        LED_POWER,
+//	input         BTN_USER,
+//	input         BTN_OSD,
+//	input         BTN_RESET,
 `endif
 
 	////////// I/O ALT /////////
-	//output        SD_SPI_CS,
-	//input         SD_SPI_MISO,
-	//output        SD_SPI_CLK,
-	//output        SD_SPI_MOSI,
-
-	//inout         SDCD_SPDIF,
-	//output        IO_SCL,
-	//inout         IO_SDA,
+//	output        SD_SPI_CS,
+//	input         SD_SPI_MISO,
+//	output        SD_SPI_CLK,
+//	output        SD_SPI_MOSI,
+//
+//	inout         SDCD_SPDIF,
+//	output        IO_SCL,
+//	inout         IO_SDA,
 
 	////////// ADC //////////////
-	//output        ADC_SCK,
-	//input         ADC_SDO,
-	//output        ADC_SDI,
-	//output        ADC_CONVST,
+//	output        ADC_SCK,
+//	input         ADC_SDO,
+//	output        ADC_SDI,
+//	output        ADC_CONVST,
 
 	////////// MB KEY ///////////
 	input   [1:0] KEY,
@@ -121,7 +121,7 @@ module sys_top
 	output  [7:0] LED
 
 	///////// USER IO ///////////
-	//inout   [6:0] USER_IO
+//	inout   [6:0] USER_IO
 );
 
 ///////////////////////// Senhor: Initializations ////////////////////////
@@ -130,12 +130,8 @@ wire [5:0] VGA_R;
 wire [5:0] VGA_G;
 wire [5:0] VGA_B;
 wire VGA_HS;
-wire VGA_VS = 1'b1;
+wire VGA_VS;
 wire VGA_EN = 1'b1;
-
-assign VGA_R = 6'b000000;
-assign VGA_G = 6'b000000;
-assign VGA_B = 6'b000000;
 
 wire [3:0] SDIO_DAT;
 wire SDIO_CMD = 1'b1;
@@ -147,28 +143,28 @@ wire BTN_RESET = 1'b1, BTN_OSD = 1'b1, BTN_USER = 1'b1;
 /////////////////////////////////////////////////////////////////////////
 
 //////////////////////  Secondary SD  ///////////////////////////////////
-//wire SD_CS, SD_CLK, SD_MOSI;
-//
-//`ifndef MISTER_DUAL_SDRAM
-//	wire sd_miso = SW[3] | SDIO_DAT[0];
-//`else
-//	wire sd_miso = 1;
-//`endif
-//wire SD_MISO; //= mcp_sdcd ? sd_miso : SD_SPI_MISO;
-//
-//`ifndef MISTER_DUAL_SDRAM
-//	assign SDIO_DAT[2:1]= 2'bZZ;
-//	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
-//	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
-//	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
-//	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
-//`else
-//	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
-//`endif
-//
-//assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ : SD_CLK;
-//assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ : SD_MOSI;
-//
+wire SD_CS, SD_CLK, SD_MOSI;
+
+`ifndef MISTER_DUAL_SDRAM
+	wire sd_miso = SW[3] | SDIO_DAT[0];
+`else
+	wire sd_miso = 1;
+`endif
+wire SD_MISO = mcp_sdcd ? sd_miso : SD_SPI_MISO;
+
+`ifndef MISTER_DUAL_SDRAM
+	assign SDIO_DAT[2:1]= 2'bZZ;
+	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
+	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
+	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
+	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
+`else
+	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
+`endif
+
+assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ : SD_CLK;
+assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ : SD_MOSI;
+
 //////////////////////  LEDs/Buttons  ///////////////////////////////////
 
 reg [7:0] led_overtake = 0;
@@ -219,12 +215,12 @@ always @(posedge FPGA_CLK2_50) begin
 	div <= div + 1'b1;
 	if(div > 100000) div <= 0;
 
-   if(!div) begin
-		deb_user <= {deb_user[6:0], btn_u | ~KEY[0]};  //MiSTer: ~KEY[1] Senhor: Buttons are switched for convenience.
+	if(!div) begin
+		deb_user <= {deb_user[6:0], btn_u | ~KEY[0]};
 		if(&deb_user) btn_user <= 1;
 		if(!deb_user) btn_user <= 0;
 
-		deb_osd <= {deb_osd[6:0], btn_o | ~KEY[1]}; //MiSTer: ~KEY[0] Senhor: Buttons are switched for convenience.
+		deb_osd <= {deb_osd[6:0], btn_o | ~KEY[1]};
 		if(&deb_osd) btn_osd <= 1;
 		if(!deb_osd) btn_osd <= 0;
 	end
@@ -1190,8 +1186,8 @@ altddio_out
 )
 hdmiclk_ddr
 (
-	.datain_h(1'b0),
-	.datain_l(1'b1),
+	.datain_h(1'b1),
+	.datain_l(1'b0),
 	.outclock(hdmi_tx_clk),
 	.dataout(HDMI_TX_CLK),
 	.aclr(1'b0),
@@ -1351,7 +1347,7 @@ assign SDCD_SPDIF =(SW[3] & ~spdif) ? 1'b0 : 1'bZ;
 	assign AUDIO_L     = SW[3] ? 1'bZ : SW[0] ? HDMI_SCLK  : analog_l;
 `endif
 
-assign HDMI_MCLK = 1'b0;
+assign HDMI_MCLK = clk_audio;
 wire clk_audio;
 
 pll_audio pll_audio
